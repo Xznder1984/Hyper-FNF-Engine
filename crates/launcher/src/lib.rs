@@ -223,10 +223,7 @@ fn launch_inner(
             let id = d.engine_id.ok_or_else(|| {
                 "could not detect the engine for this mod; pick one from the list".to_string()
             })?;
-            progress(
-                app,
-                &format!("detected {} ({})", id, d.confidence.as_str()),
-            );
+            progress(app, &format!("detected {} ({})", id, d.confidence.as_str()));
             for ev in &d.evidence {
                 progress(app, ev);
             }

@@ -1,7 +1,5 @@
 use clap::Subcommand;
-use hyper_core::{
-    bench::BenchReport, engine::EngineLibrary, launch, store,
-};
+use hyper_core::{bench::BenchReport, engine::EngineLibrary, launch, store};
 
 use crate::out;
 
@@ -26,9 +24,7 @@ enum BenchCmd {
         version: String,
     },
     /// Run both benchmarks and print a measured-only report (JSON too)
-    All {
-        zip: std::path::PathBuf,
-    },
+    All { zip: std::path::PathBuf },
 }
 
 pub fn run(args: Args) -> i32 {
@@ -49,9 +45,9 @@ fn run_inner(args: Args) -> hyper_core::Result<i32> {
         }
         BenchCmd::Start { engine, version } => {
             let lib = EngineLibrary::load()?;
-            let def = lib.get(&engine).ok_or_else(|| {
-                hyper_core::HyperError::NotFound(format!("engine '{engine}'"))
-            })?;
+            let def = lib
+                .get(&engine)
+                .ok_or_else(|| hyper_core::HyperError::NotFound(format!("engine '{engine}'")))?;
             let state = store::EngineState::load(def.id.as_str())?;
             let dir = match state.dir_for(&version) {
                 Some(d) if d.is_dir() => d,
@@ -61,10 +57,7 @@ fn run_inner(args: Args) -> hyper_core::Result<i32> {
                 }
             };
             let exe = launch::find_executable(&dir).ok_or_else(|| {
-                hyper_core::HyperError::NotFound(format!(
-                    "no executable in {}",
-                    dir.display()
-                ))
+                hyper_core::HyperError::NotFound(format!("no executable in {}", dir.display()))
             })?;
             report.bench_engine_start(&exe, &dir)?;
         }
@@ -75,7 +68,11 @@ fn run_inner(args: Args) -> hyper_core::Result<i32> {
                 .iter()
                 .flat_map(|st| st.versions.iter().map(|v| (st.id.clone(), v.dir.clone())))
                 .next()
-                .ok_or_else(|| hyper_core::HyperError::NotFound("install an engine first (hfe add engine psych)".into()))?;
+                .ok_or_else(|| {
+                    hyper_core::HyperError::NotFound(
+                        "install an engine first (hfe add engine psych)".into(),
+                    )
+                })?;
             let _ = lib;
             let tmp = std::env::temp_dir().join(format!("hfe-bench-{}", std::process::id()));
             let _ = std::fs::remove_dir_all(&tmp);

@@ -1,7 +1,5 @@
 use clap::Subcommand;
-use hyper_core::{
-    detect, engine::EngineLibrary, launch, settings::Settings, store,
-};
+use hyper_core::{detect, engine::EngineLibrary, launch, settings::Settings, store};
 
 use crate::out;
 
@@ -58,7 +56,12 @@ fn list_engines() -> hyper_core::Result<i32> {
         println!("  {}  {}", out::cyan(&s.id), name);
         for v in &s.versions {
             let exe = launch::find_executable(&v.dir)
-                .map(|p| p.file_name().unwrap_or_default().to_string_lossy().to_string())
+                .map(|p| {
+                    p.file_name()
+                        .unwrap_or_default()
+                        .to_string_lossy()
+                        .to_string()
+                })
                 .unwrap_or_else(|| "?".into());
             println!(
                 "    {}  {}  {}  exe: {}",
@@ -94,7 +97,12 @@ fn detect_mod(path: &std::path::Path) -> hyper_core::Result<i32> {
     let det = detect::detect(path, &lib, &settings);
     match &det.engine_id {
         Some(id) => {
-            println!("{} {} ({})", out::cyan(id), out::dim(&path.display().to_string()), det.confidence.as_str());
+            println!(
+                "{} {} ({})",
+                out::cyan(id),
+                out::dim(&path.display().to_string()),
+                det.confidence.as_str()
+            );
             for c in &det.candidates {
                 println!("  candidate {:<12} score {}", c.engine_id, c.score);
             }

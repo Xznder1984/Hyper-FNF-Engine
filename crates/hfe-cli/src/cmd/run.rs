@@ -4,12 +4,13 @@ use hyper_core::{
     detect::{self, mod_key},
     engine::EngineLibrary,
     github::{GitHub, Release},
-    launch,
-    paths, resolve, sarahud, settings::Settings, store,
+    launch, paths, resolve, sarahud,
+    settings::Settings,
+    store,
 };
 
-use crate::out;
 use crate::cmd::printer;
+use crate::out;
 
 #[derive(clap::Args, Debug)]
 pub struct Args {
@@ -273,7 +274,10 @@ fn ensure_assets(engine_root: &std::path::Path, game: &str) -> hyper_core::Resul
         out::warn(&format!("no assets/ found in {}", game));
         return Ok(());
     }
-    out::status("assets", &format!("copying {} -> {}", assets_src.display(), dst.display()));
+    out::status(
+        "assets",
+        &format!("copying {} -> {}", assets_src.display(), dst.display()),
+    );
     copy_dir(&assets_src, &dst)?;
     Ok(())
 }

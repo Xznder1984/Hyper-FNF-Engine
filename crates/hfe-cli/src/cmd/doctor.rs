@@ -1,6 +1,4 @@
-use hyper_core::{
-    engine::EngineLibrary, paths, settings::Settings, store,
-};
+use hyper_core::{engine::EngineLibrary, paths, settings::Settings, store};
 
 use crate::out;
 
@@ -29,8 +27,7 @@ pub fn run() -> i32 {
     }
     // test writes
     let probe = paths::data_dir().join(".write-probe");
-    let writable = std::fs::write(&probe, b"ok").is_ok()
-        && std::fs::remove_file(&probe).is_ok();
+    let writable = std::fs::write(&probe, b"ok").is_ok() && std::fs::remove_file(&probe).is_ok();
     checks.push(Check {
         name: "dirs writable".into(),
         ok: writable,
@@ -69,11 +66,7 @@ pub fn run() -> i32 {
     match store::installed_engines() {
         Ok(states) => {
             for s in states {
-                let missing = s
-                    .versions
-                    .iter()
-                    .filter(|v| !v.dir.is_dir())
-                    .count();
+                let missing = s.versions.iter().filter(|v| !v.dir.is_dir()).count();
                 if missing == 0 {
                     checks.push(Check {
                         name: format!("engine {}", s.id),
@@ -131,7 +124,12 @@ pub fn run() -> i32 {
     checks.push(Check {
         name: "git".into(),
         ok: has_git,
-        detail: if has_git { "available" } else { "missing; 'hfe pkg add git' will not work" }.into(),
+        detail: if has_git {
+            "available"
+        } else {
+            "missing; 'hfe pkg add git' will not work"
+        }
+        .into(),
     });
 
     // report

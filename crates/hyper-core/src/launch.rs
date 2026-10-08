@@ -27,9 +27,8 @@ impl Priority {
 impl std::str::FromStr for Priority {
     type Err = String;
     fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
-        Priority::parse(s).ok_or_else(|| {
-            format!("unknown priority '{s}' (expected low|normal|high|realtime)")
-        })
+        Priority::parse(s)
+            .ok_or_else(|| format!("unknown priority '{s}' (expected low|normal|high|realtime)"))
     }
 }
 
@@ -69,7 +68,10 @@ pub fn find_executable(root: &Path) -> Option<PathBuf> {
                 .flatten()
                 .filter(|e| {
                     e.file_type().map(|t| t.is_file()).unwrap_or(false)
-                        && e.file_name().to_string_lossy().to_lowercase().ends_with(".exe")
+                        && e.file_name()
+                            .to_string_lossy()
+                            .to_lowercase()
+                            .ends_with(".exe")
                 })
                 .map(|e| e.path())
                 .collect();
@@ -110,7 +112,9 @@ pub fn find_executable(root: &Path) -> Option<PathBuf> {
 #[cfg(unix)]
 fn is_executable(p: &Path) -> bool {
     use std::os::unix::fs::PermissionsExt;
-    fs::metadata(p).map(|m| m.permissions().mode() & 0o111 != 0).unwrap_or(false)
+    fs::metadata(p)
+        .map(|m| m.permissions().mode() & 0o111 != 0)
+        .unwrap_or(false)
 }
 
 /// Stage a mod folder into the engine's mods dir so the engine sees it.
@@ -162,23 +166,16 @@ pub fn mod_folder_name(mod_dir: &Path) -> String {
 }
 
 /// Launch the engine with the staged mod.
-pub fn launch(
-    engine_root: &Path,
-    exe: &Path,
-    opts: &LaunchOptions,
-) -> Result<Child> {
+pub fn launch(engine_root: &Path, exe: &Path, opts: &LaunchOptions) -> Result<Child> {
     let mut cmd = Command::new(exe);
     cmd.current_dir(engine_root);
     for (k, v) in &opts.env {
         cmd.env(k, v);
     }
     cmd.args(&opts.extra_args);
-    let child = cmd.spawn().map_err(|e| {
-        HyperError::Message(format!(
-            "could not start {}: {e}",
-            exe.display()
-        ))
-    })?;
+    let child = cmd
+        .spawn()
+        .map_err(|e| HyperError::Message(format!("could not start {}: {e}", exe.display())))?;
     if let Some(p) = opts.priority {
         set_priority(child.id(), p)?;
     }
@@ -190,9 +187,8 @@ fn set_priority(pid: u32, priority: Priority) -> Result<()> {
     {
         use windows_sys::Win32::Foundation::{CloseHandle, HANDLE};
         use windows_sys::Win32::System::Threading::{
-            OpenProcess, SetPriorityClass, BELOW_NORMAL_PRIORITY_CLASS,
-            NORMAL_PRIORITY_CLASS, HIGH_PRIORITY_CLASS, REALTIME_PRIORITY_CLASS,
-            PROCESS_SET_INFORMATION,
+            OpenProcess, SetPriorityClass, BELOW_NORMAL_PRIORITY_CLASS, HIGH_PRIORITY_CLASS,
+            NORMAL_PRIORITY_CLASS, PROCESS_SET_INFORMATION, REALTIME_PRIORITY_CLASS,
         };
         unsafe {
             let handle: HANDLE = OpenProcess(PROCESS_SET_INFORMATION, 0, pid);

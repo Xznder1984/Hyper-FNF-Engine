@@ -51,9 +51,7 @@ pub struct ModMeta {
 
 /// Stable key for a mod directory (used for profile/override lookups).
 pub fn mod_key(path: &Path) -> Result<String> {
-    let canon = path
-        .canonicalize()
-        .unwrap_or_else(|_| path.to_path_buf());
+    let canon = path.canonicalize().unwrap_or_else(|_| path.to_path_buf());
     use sha2::{Digest, Sha256};
     let mut h = Sha256::new();
     h.update(canon.to_string_lossy().as_bytes());
@@ -90,10 +88,8 @@ fn read_meta(path: &Path) -> ModMeta {
                                     .map(|s| s.to_string());
                             }
                             if meta.uid.is_none() {
-                                meta.uid = v
-                                    .get("uid")
-                                    .and_then(|u| u.as_str())
-                                    .map(|s| s.to_string());
+                                meta.uid =
+                                    v.get("uid").and_then(|u| u.as_str()).map(|s| s.to_string());
                             }
                         }
                     }
@@ -250,7 +246,12 @@ fn structural_hits(mod_dir: &Path, def: &EngineDef) -> Vec<(String, i32)> {
     }
     matched
         .into_iter()
-        .map(|sig| (sig.clone(), def.detect.signatures.get(&sig).copied().unwrap_or(1)))
+        .map(|sig| {
+            (
+                sig.clone(),
+                def.detect.signatures.get(&sig).copied().unwrap_or(1),
+            )
+        })
         .collect()
 }
 
@@ -299,7 +300,10 @@ impl GameBananaClient {
         let body = self.http.get_text(&url)?;
         let v: GameBananaMod = serde_json::from_str(&body)?;
         let _ = fs::create_dir_all(&cache_dir);
-        let _ = fs::write(&cache_file, serde_json::to_vec_pretty(&v).unwrap_or_default());
+        let _ = fs::write(
+            &cache_file,
+            serde_json::to_vec_pretty(&v).unwrap_or_default(),
+        );
         Ok(Some(v))
     }
 }
@@ -332,12 +336,15 @@ mod tests {
     fn detects_psych_from_pack_json_and_structure() {
         let lib = EngineLibrary::load().unwrap();
         let s = Settings::default();
-        let m = tmp_mod("psych", &[
-            "pack.json",
-            "data/songs/bopeebo/Chart.json",
-            "songs/bopeebo/Inst.ogg",
-            "scripts/global/PlayState.lua",
-        ]);
+        let m = tmp_mod(
+            "psych",
+            &[
+                "pack.json",
+                "data/songs/bopeebo/Chart.json",
+                "songs/bopeebo/Inst.ogg",
+                "scripts/global/PlayState.lua",
+            ],
+        );
         let d = detect(&m, &lib, &s);
         assert_eq!(d.engine_id.as_deref(), Some("psych"));
         assert!(d.confidence >= Confidence::High, "{d:?}");
@@ -347,7 +354,10 @@ mod tests {
     fn detects_codename_from_metadata_json() {
         let lib = EngineLibrary::load().unwrap();
         let s = Settings::default();
-        let m = tmp_mod("codename", &["metadata.json", "main.xml", "data/songs/x/Chart.json"]);
+        let m = tmp_mod(
+            "codename",
+            &["metadata.json", "main.xml", "data/songs/x/Chart.json"],
+        );
         let d = detect(&m, &lib, &s);
         assert_eq!(d.engine_id.as_deref(), Some("codename"));
         assert!(d.confidence >= Confidence::High, "{d:?}");
@@ -357,7 +367,10 @@ mod tests {
     fn detects_fps_plus_from_meta_with_uid_and_scripts() {
         let lib = EngineLibrary::load().unwrap();
         let s = Settings::default();
-        let m = tmp_mod("fps", &["meta.json", "scripts/global/PlayState.hx", "data/chart.lua"]);
+        let m = tmp_mod(
+            "fps",
+            &["meta.json", "scripts/global/PlayState.hx", "data/chart.lua"],
+        );
         let d = detect(&m, &lib, &s);
         assert_eq!(d.engine_id.as_deref(), Some("fps-plus"));
         assert!(d.confidence >= Confidence::High, "{d:?}");

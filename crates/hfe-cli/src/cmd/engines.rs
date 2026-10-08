@@ -1,7 +1,5 @@
 use clap::Subcommand;
-use hyper_core::{
-    download::clear_cache, engine::EngineLibrary, github::GitHub, resolve,
-};
+use hyper_core::{download::clear_cache, engine::EngineLibrary, github::GitHub, resolve};
 
 use crate::out;
 
@@ -41,7 +39,12 @@ fn run_inner(args: Args) -> hyper_core::Result<i32> {
     let lib = EngineLibrary::load()?;
     match args.cmd {
         EngCmd::List => {
-            println!("{:<16} {:<28} {}", out::bold("id"), out::bold("name"), out::bold("release source"));
+            println!(
+                "{:<16} {:<28} {}",
+                out::bold("id"),
+                out::bold("name"),
+                out::bold("release source")
+            );
             for d in &lib.defs {
                 let src = d.repo.as_deref().unwrap_or("direct URL");
                 println!("{:<16} {:<28} {}", out::cyan(&d.id), d.name, src);
@@ -49,12 +52,15 @@ fn run_inner(args: Args) -> hyper_core::Result<i32> {
             Ok(0)
         }
         EngCmd::Show { id } => {
-            let d = lib.get(&id).ok_or_else(|| {
-                hyper_core::HyperError::NotFound(format!("engine '{id}'"))
-            })?;
+            let d = lib
+                .get(&id)
+                .ok_or_else(|| hyper_core::HyperError::NotFound(format!("engine '{id}'")))?;
             println!("id          : {}", d.id);
             println!("name        : {}", d.name);
-            println!("license     : {}", d.license.as_deref().unwrap_or("unknown"));
+            println!(
+                "license     : {}",
+                d.license.as_deref().unwrap_or("unknown")
+            );
             println!("homepage    : {}", d.homepage.as_deref().unwrap_or("-"));
             println!("repo        : {}", d.repo.as_deref().unwrap_or("-"));
             println!("mods_dir    : {}", d.mods_dir);
@@ -71,9 +77,9 @@ fn run_inner(args: Args) -> hyper_core::Result<i32> {
             Ok(0)
         }
         EngCmd::Tags { id, include_pre } => {
-            let d = lib.get(&id).ok_or_else(|| {
-                hyper_core::HyperError::NotFound(format!("engine '{id}'"))
-            })?;
+            let d = lib
+                .get(&id)
+                .ok_or_else(|| hyper_core::HyperError::NotFound(format!("engine '{id}'")))?;
             let repo = d.repo.as_deref().ok_or_else(|| {
                 hyper_core::HyperError::Message(format!("engine '{id}' has no GitHub source"))
             })?;
@@ -85,7 +91,11 @@ fn run_inner(args: Args) -> hyper_core::Result<i32> {
                 println!(
                     "  {:<20} {}{}",
                     out::green(&r.tag),
-                    if r.assets.is_empty() { " (no assets)" } else { "" },
+                    if r.assets.is_empty() {
+                        " (no assets)"
+                    } else {
+                        ""
+                    },
                     pre
                 );
             }

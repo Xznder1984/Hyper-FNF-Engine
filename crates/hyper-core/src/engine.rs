@@ -110,7 +110,8 @@ impl EngineLibrary {
             load_dir_into(&mut by_id, &dir)?;
         }
         lib.defs = by_id.into_values().collect();
-        lib.defs.retain(|d| d.asset_patterns.contains_key(&host_os) || d.repo.is_some());
+        lib.defs
+            .retain(|d| d.asset_patterns.contains_key(&host_os) || d.repo.is_some());
         Ok(lib)
     }
 
@@ -222,7 +223,10 @@ mod tests {
     fn reads_embedded_psych() {
         let lib = EngineLibrary::load().unwrap();
         let ids = lib.ids();
-        assert!(ids.iter().any(|i| i == "psych"), "psych def missing: {ids:?}");
+        assert!(
+            ids.iter().any(|i| i == "psych"),
+            "psych def missing: {ids:?}"
+        );
     }
 
     #[test]
@@ -230,7 +234,10 @@ mod tests {
         assert!(glob_match("data/**", "data/songs/bopeebo/Chart.json"));
         assert!(glob_match("data/**", "data/chart.lua"));
         assert!(!glob_match("data/**", "songs/bopeebo/Chart.json"));
-        assert!(glob_match("scripts/**/*.lua", "scripts/global/PlayState.lua"));
+        assert!(glob_match(
+            "scripts/**/*.lua",
+            "scripts/global/PlayState.lua"
+        ));
         assert!(glob_match("**/*.json", "a/b/c.json"));
     }
 }

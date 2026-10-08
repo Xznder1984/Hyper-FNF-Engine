@@ -60,7 +60,16 @@ fn run_inner(args: Args) -> hyper_core::Result<i32> {
             match update::check(&settings, &http, &args.manifest_url) {
                 Ok(Some(up)) => {
                     match &up.artifact {
-                        Some(a) => out::status("update", &format!("{} -> {} ({})", update::read_installed_version().unwrap_or_else(|| env!("CARGO_PKG_VERSION").into()), up.manifest.version, a.url)),
+                        Some(a) => out::status(
+                            "update",
+                            &format!(
+                                "{} -> {} ({})",
+                                update::read_installed_version()
+                                    .unwrap_or_else(|| env!("CARGO_PKG_VERSION").into()),
+                                up.manifest.version,
+                                a.url
+                            ),
+                        ),
                         None => out::status("update", &up.reason),
                     }
                     if let Some(n) = &up.manifest.notes {
@@ -103,7 +112,15 @@ fn run_inner(args: Args) -> hyper_core::Result<i32> {
                     return Ok(1);
                 }
             };
-            out::status("update", &format!("{} -> {}", update::read_installed_version().unwrap_or_else(|| env!("CARGO_PKG_VERSION").into()), up.manifest.version));
+            out::status(
+                "update",
+                &format!(
+                    "{} -> {}",
+                    update::read_installed_version()
+                        .unwrap_or_else(|| env!("CARGO_PKG_VERSION").into()),
+                    up.manifest.version
+                ),
+            );
             if !crate::cmd::confirm("install this update?", args.yes) {
                 out::note("aborted");
                 return Ok(0);
@@ -122,24 +139,36 @@ fn run_inner(args: Args) -> hyper_core::Result<i32> {
                 }
             }
         }
-        UpdateCmd::Rollback => {
-            match update::rollback() {
-                Ok(b) => {
-                    out::ok(&format!("restored previous binary from {}", b.display()));
-                    Ok(0)
-                }
-                Err(e) => {
-                    out::fail(&e.to_string());
-                    Ok(e.exit_code())
-                }
+        UpdateCmd::Rollback => match update::rollback() {
+            Ok(b) => {
+                out::ok(&format!("restored previous binary from {}", b.display()));
+                Ok(0)
             }
-        }
+            Err(e) => {
+                out::fail(&e.to_string());
+                Ok(e.exit_code())
+            }
+        },
         UpdateCmd::Status => {
-            println!("installed : {}", update::read_installed_version().unwrap_or_else(|| env!("CARGO_PKG_VERSION").into()));
+            println!(
+                "installed : {}",
+                update::read_installed_version()
+                    .unwrap_or_else(|| env!("CARGO_PKG_VERSION").into())
+            );
             let m = paths::launcher_manifest_path();
             println!("backups   : {}", paths::rollback_dir().display());
-            println!("managed   : {}", managed_install().unwrap_or_else(|| "no".into()));
-            println!("updates   : {}", if settings.update.enabled { "enabled" } else { "disabled" });
+            println!(
+                "managed   : {}",
+                managed_install().unwrap_or_else(|| "no".into())
+            );
+            println!(
+                "updates   : {}",
+                if settings.update.enabled {
+                    "enabled"
+                } else {
+                    "disabled"
+                }
+            );
             println!("auto-check: {}", settings.update.auto_check);
             println!("majors    : {}", settings.update.allow_major);
             let _ = m;
@@ -148,7 +177,9 @@ fn run_inner(args: Args) -> hyper_core::Result<i32> {
         UpdateCmd::EnableMajor => {
             settings.update.allow_major = true;
             settings.save()?;
-            out::ok("major updates enabled (still only installed when you run 'hfe update install')");
+            out::ok(
+                "major updates enabled (still only installed when you run 'hfe update install')",
+            );
             Ok(0)
         }
         UpdateCmd::Disable => {

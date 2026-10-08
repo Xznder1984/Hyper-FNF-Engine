@@ -37,5 +37,8 @@ fn main() {
 
     let module = out_dir.join("engines_generated.rs");
     fs::write(module, gen).unwrap();
-    println!("cargo:rerun-if-changed={}", out_dir.join("engines_generated.rs").display());
+    println!(
+        "cargo:rerun-if-changed={}",
+        out_dir.join("engines_generated.rs").display()
+    );
 }

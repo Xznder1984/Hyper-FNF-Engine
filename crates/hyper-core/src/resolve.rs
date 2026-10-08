@@ -7,10 +7,7 @@ use crate::github::Release;
 ///   the repo only ships prereleases).
 /// - `requested` == some tag -> exact tag, verified to exist.
 /// - `requested` == semver-ish prefix -> newest satisfying tag.
-pub fn choose_tag(
-    releases: &[Release],
-    requested: Option<&str>,
-) -> Result<String> {
+pub fn choose_tag(releases: &[Release], requested: Option<&str>) -> Result<String> {
     match requested {
         None | Some("latest") => {
             let stable = releases.iter().find(|r| !r.prerelease);
@@ -23,16 +20,11 @@ pub fn choose_tag(
         }
         Some(tag) => {
             let t = tag.trim().trim_start_matches('v');
-            if let Some(r) = releases
-                .iter()
-                .find(|r| r.tag.trim_start_matches('v') == t)
-            {
+            if let Some(r) = releases.iter().find(|r| r.tag.trim_start_matches('v') == t) {
                 return Ok(r.tag.clone());
             }
             // prefix match (semver-ish)
-            let norm = |s: &str| {
-                s.trim_start_matches('v').to_lowercase()
-            };
+            let norm = |s: &str| s.trim_start_matches('v').to_lowercase();
             let mut best: Option<&Release> = None;
             for r in releases {
                 let rt = norm(&r.tag);

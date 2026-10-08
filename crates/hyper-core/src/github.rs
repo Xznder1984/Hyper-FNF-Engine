@@ -109,9 +109,10 @@ impl GitHub {
             Ok(r) => Ok(Some(r)),
             Err(HyperError::Network(msg)) if msg.contains("404") => {
                 // tag probably exists without a GitHub Release; fall back to list
-                Ok(self.releases(repo)?.into_iter().find(|r| {
-                    r.tag.trim_start_matches('v') == t || r.tag == tag
-                }))
+                Ok(self
+                    .releases(repo)?
+                    .into_iter()
+                    .find(|r| r.tag.trim_start_matches('v') == t || r.tag == tag))
             }
             Err(e) => Err(e),
         }
@@ -128,11 +129,7 @@ impl GitHub {
         // exact patterns (case-insensitive)
         for pat in patterns {
             let pl = pat.to_lowercase();
-            if let Some(a) = release
-                .assets
-                .iter()
-                .find(|a| a.name.to_lowercase() == pl)
-            {
+            if let Some(a) = release.assets.iter().find(|a| a.name.to_lowercase() == pl) {
                 return Ok(Some(a.clone()));
             }
             if let Some(a) = release

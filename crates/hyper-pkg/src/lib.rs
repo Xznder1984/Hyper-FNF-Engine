@@ -14,14 +14,8 @@ use std::path::PathBuf;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Source {
-    Git {
-        url: String,
-        rev: Option<String>,
-    },
-    Release {
-        url: String,
-        sha256: Option<String>,
-    },
+    Git { url: String, rev: Option<String> },
+    Release { url: String, sha256: Option<String> },
 }
 
 /// Manifest written next to a user's mod once a package is added.
@@ -87,7 +81,9 @@ pub fn parse_add_spec(args: &[String]) -> Result<Source> {
         Some("release") | Some("url") => {
             let url = args
                 .get(1)
-                .ok_or_else(|| PkgError::Message("usage: hfe pkg add release <url> [sha256]".into()))?
+                .ok_or_else(|| {
+                    PkgError::Message("usage: hfe pkg add release <url> [sha256]".into())
+                })?
                 .clone();
             let sha256 = args.get(2).cloned();
             Ok(Source::Release { url, sha256 })

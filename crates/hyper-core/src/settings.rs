@@ -140,9 +140,15 @@ mod tests {
 
     #[test]
     fn fresh_install_defaults_match_serde_defaults() {
-        assert!(Settings::default().update.enabled, "checks on for fresh installs");
+        assert!(
+            Settings::default().update.enabled,
+            "checks on for fresh installs"
+        );
         let empty: Settings = serde_json::from_str("{}").unwrap();
-        assert!(empty.update.enabled, "serde default must agree with Default");
+        assert!(
+            empty.update.enabled,
+            "serde default must agree with Default"
+        );
         assert!(!empty.update.auto_check);
         assert!(!empty.update.allow_major);
     }

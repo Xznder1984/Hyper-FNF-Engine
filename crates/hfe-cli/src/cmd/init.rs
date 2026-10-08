@@ -76,11 +76,7 @@ fn init_dir(root: &std::path::Path, dry_run: bool, yes: bool) -> hyper_core::Res
     if let Some(engine_id) = &det.engine_id {
         out::status(
             "detected",
-            &format!(
-                "{} (confidence: {})",
-                engine_id,
-                det.confidence.as_str()
-            ),
+            &format!("{} (confidence: {})", engine_id, det.confidence.as_str()),
         );
         for ev in &det.evidence {
             out::note(ev);
@@ -118,7 +114,11 @@ fn init_dir(root: &std::path::Path, dry_run: bool, yes: bool) -> hyper_core::Res
     Ok(0)
 }
 
-fn write_config(root: &std::path::Path, engine: Option<&str>, version: Option<&str>) -> hyper_core::Result<()> {
+fn write_config(
+    root: &std::path::Path,
+    engine: Option<&str>,
+    version: Option<&str>,
+) -> hyper_core::Result<()> {
     let dir = root.join(".hyper");
     std::fs::create_dir_all(&dir)?;
     let version_line = match version {

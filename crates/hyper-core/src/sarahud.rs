@@ -111,7 +111,10 @@ pub fn remove(mods_dir: &Path, order_file: Option<&str>, folder: &str) -> Result
                 .filter(|l| l.trim() != folder && !l.trim().is_empty())
                 .map(|l| l.to_string())
                 .collect();
-            fs::write(&path, lines.join("\n") + if lines.is_empty() { "" } else { "\n" })?;
+            fs::write(
+                &path,
+                lines.join("\n") + if lines.is_empty() { "" } else { "\n" },
+            )?;
         }
     }
     Ok(())

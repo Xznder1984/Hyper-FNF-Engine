@@ -52,7 +52,11 @@ pub struct AvailableUpdate {
 /// Check for an update. Returns the update when one exists and the user's
 /// settings permit installing it (opt-out, no silent majors, no self-update
 /// for package-manager installs).
-pub fn check(settings: &Settings, http: &HttpClient, manifest_url: &str) -> Result<Option<AvailableUpdate>> {
+pub fn check(
+    settings: &Settings,
+    http: &HttpClient,
+    manifest_url: &str,
+) -> Result<Option<AvailableUpdate>> {
     if !settings.update.enabled {
         return Ok(None);
     }
@@ -148,13 +152,13 @@ fn replace_file(src: &Path, dest: &Path) -> Result<()> {
     let _ = fs::remove_file(&aside);
     if fs::rename(dest, &aside).is_err() {
         // dest could not be moved aside; direct write is the last resort
-        return fs::copy(src, dest)
-            .map(|_| ())
-            .map_err(|e| HyperError::Message(format!(
+        return fs::copy(src, dest).map(|_| ()).map_err(|e| {
+            HyperError::Message(format!(
                 "could not replace {}: {e}. Close the launcher and retry, or rollback \
                  with 'hfe update rollback'",
                 dest.display()
-            )));
+            ))
+        });
     }
     let placed = fs::rename(src, dest).or_else(|_| fs::copy(src, dest).map(|_| ()));
     match placed {

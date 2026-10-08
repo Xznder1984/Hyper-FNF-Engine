@@ -62,7 +62,12 @@ mod tests {
             return;
         }
         set(SERVICE, "roundtrip-test", "abc").unwrap();
-        assert_eq!(get(SERVICE, "roundtrip-test").unwrap().as_deref(), Some("abc"));
-        let _ = entry(SERVICE, "roundtrip-test").unwrap().delete_credential();
+        assert_eq!(
+            get(SERVICE, "roundtrip-test").unwrap().as_deref(),
+            Some("abc")
+        );
+        let _ = entry(SERVICE, "roundtrip-test")
+            .unwrap()
+            .delete_credential();
     }
 }

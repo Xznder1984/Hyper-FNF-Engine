@@ -41,9 +41,7 @@ enum AddCmd {
         yes: bool,
     },
     /// Set the base-game assets folder used by engines that need them
-    Assets {
-        path: PathBuf,
-    },
+    Assets { path: PathBuf },
     /// Store a GitHub token securely (OS credential store) to lift API limits
     Token {
         #[command(subcommand)]
@@ -71,7 +69,11 @@ pub fn run(args: Args) -> i32 {
 fn run_inner(args: Args) -> hyper_core::Result<i32> {
     match args.cmd {
         AddCmd::Engine { id, version, yes } => add_engine(&id, &version, yes),
-        AddCmd::Mod { path, engine, version } => add_mod(&path, &engine, &version),
+        AddCmd::Mod {
+            path,
+            engine,
+            version,
+        } => add_mod(&path, &engine, &version),
         AddCmd::Sarahud { engine, yes } => add_sarahud(&engine, yes),
         AddCmd::Assets { path } => add_assets(&path),
         AddCmd::Token { action } => token(action),
@@ -97,7 +99,10 @@ fn add_engine(id: &str, version: &str, yes: bool) -> hyper_core::Result<i32> {
     let state = store::EngineState::load(id)?;
     if let Some(dir) = state.dir_for(&tag) {
         if dir.is_dir() {
-            out::ok(&format!("{id} {tag} is already installed at {}", dir.display()));
+            out::ok(&format!(
+                "{id} {tag} is already installed at {}",
+                dir.display()
+            ));
             return Ok(0);
         }
     }
@@ -125,7 +130,9 @@ fn add_engine(id: &str, version: &str, yes: bool) -> hyper_core::Result<i32> {
         }
     };
     out::status("fetch", &format!("{} ({})", asset.name, asset.url));
-    let dest = hyper_core::paths::cache_dir().join("downloads").join(&asset.name);
+    let dest = hyper_core::paths::cache_dir()
+        .join("downloads")
+        .join(&asset.name);
     if !dest.exists() {
         gh.download_asset(&asset, &dest, asset.digest.as_deref(), printer())?;
     }

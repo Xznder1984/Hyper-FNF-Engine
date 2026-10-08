@@ -91,7 +91,11 @@ mod tests {
         let mut w = zip::ZipWriter::new(file);
         let opts = zip::write::FileOptions::default();
         let mut add = |p: &Path| -> Result<()> {
-            let rel = p.strip_prefix(src).unwrap().to_string_lossy().replace('\\', "/");
+            let rel = p
+                .strip_prefix(src)
+                .unwrap()
+                .to_string_lossy()
+                .replace('\\', "/");
             if p.is_dir() {
                 w.add_directory(format!("{rel}/"), opts)?;
             } else {
@@ -125,7 +129,8 @@ mod tests {
         let zip_path = dir.join("bad.zip");
         let f = fs::File::create(&zip_path).unwrap();
         let mut w = zip::ZipWriter::new(f);
-        w.start_file("../evil.txt", zip::write::FileOptions::default()).unwrap();
+        w.start_file("../evil.txt", zip::write::FileOptions::default())
+            .unwrap();
         let _ = w.write_all(b"evil");
         let _ = w.finish();
         let res = safe_extract_zip(&zip_path, &dir.join("out"));

@@ -18,7 +18,10 @@ pub fn confirm(msg: &str, yes: bool) -> bool {
         return true;
     }
     if !std::io::stdin().is_terminal() {
-        println!("{}: {msg} (pass --yes to accept)", crate::out::yellow("needs-confirmation"));
+        println!(
+            "{}: {msg} (pass --yes to accept)",
+            crate::out::yellow("needs-confirmation")
+        );
         return false;
     }
     use std::io::Write;

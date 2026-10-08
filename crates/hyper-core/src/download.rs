@@ -33,8 +33,8 @@ impl HttpClient {
     }
 
     pub fn assert_allowed(url: &str) -> Result<()> {
-        let u = url::Url::parse(url)
-            .map_err(|e| HyperError::Network(format!("bad url {url}: {e}")))?;
+        let u =
+            url::Url::parse(url).map_err(|e| HyperError::Network(format!("bad url {url}: {e}")))?;
         match u.scheme() {
             "https" => Ok(()),
             "http" => {
@@ -231,7 +231,13 @@ pub fn sha256_bytes(data: &[u8]) -> String {
 fn cache_file(key: &str) -> PathBuf {
     let safe: String = key
         .chars()
-        .map(|c| if c.is_alphanumeric() || c == '-' || c == '.' || c == '_' { c } else { '_' })
+        .map(|c| {
+            if c.is_alphanumeric() || c == '-' || c == '.' || c == '_' {
+                c
+            } else {
+                '_'
+            }
+        })
         .collect();
     paths::github_cache_dir().join(format!("{}.json", &safe[..safe.len().min(160)]))
 }

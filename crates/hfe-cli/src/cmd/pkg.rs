@@ -13,9 +13,7 @@ pub struct Args {
 #[derive(Subcommand, Debug)]
 enum PkgCmd {
     /// Add a mod from an explicit source: git <url> [rev] | release <url> [sha256]
-    Add {
-        args: Vec<String>,
-    },
+    Add { args: Vec<String> },
     /// Search a package registry (not available yet - fails honestly)
     Search { query: String },
     /// Registry / source status
@@ -85,7 +83,9 @@ fn run_inner(args: Args) -> hyper_pkg::Result<i32> {
                                 }
                             }
                         })
-                        .map_err(|e| hyper_pkg::PkgError::Message(format!("download failed: {e}")))?;
+                        .map_err(|e| {
+                            hyper_pkg::PkgError::Message(format!("download failed: {e}"))
+                        })?;
                     out::ok(&format!("downloaded {got} bytes to {}", dest.display()));
                     if let Some(expected) = sha256 {
                         let actual = hyper_core::download::sha256_file(&dest).map_err(|e| {
@@ -111,14 +111,22 @@ fn run_inner(args: Args) -> hyper_pkg::Result<i32> {
                 Ok(_) => unreachable!(),
                 Err(e) => {
                     out::note(&e.to_string());
-                    out::note("until a registry exists, add mods explicitly: hfe pkg add git <url>");
+                    out::note(
+                        "until a registry exists, add mods explicitly: hfe pkg add git <url>",
+                    );
                     Ok(1)
                 }
             }
         }
         PkgCmd::Status => {
-            out::status("registry", "coming soon (no fake registry, no placeholder packages)");
-            out::status("sources", "git clone / release download today; manifest format designed");
+            out::status(
+                "registry",
+                "coming soon (no fake registry, no placeholder packages)",
+            );
+            out::status(
+                "sources",
+                "git clone / release download today; manifest format designed",
+            );
             Ok(0)
         }
     }

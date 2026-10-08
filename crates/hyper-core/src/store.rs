@@ -63,12 +63,14 @@ impl EngineState {
 
     /// Newest installed version directory ("latest"), numeric-aware.
     pub fn latest_dir(&self) -> Option<PathBuf> {
-        self.versions.iter().fold(None, |best, v| match best {
-            None => Some(v),
-            Some(b) if cmp_versions(&v.version, &b.version).is_gt() => Some(v),
-            Some(b) => Some(b),
-        })
-        .map(|v| v.dir.clone())
+        self.versions
+            .iter()
+            .fold(None, |best, v| match best {
+                None => Some(v),
+                Some(b) if cmp_versions(&v.version, &b.version).is_gt() => Some(v),
+                Some(b) => Some(b),
+            })
+            .map(|v| v.dir.clone())
     }
 }
 
@@ -124,10 +126,15 @@ pub fn install_from_archive(
     let mut state = EngineState::load(&def.id)?;
     if state.installed(version) {
         return state.dir_for(version).ok_or_else(|| {
-            HyperError::Message(format!("{} {} recorded but missing on disk", def.id, version))
+            HyperError::Message(format!(
+                "{} {} recorded but missing on disk",
+                def.id, version
+            ))
         });
     }
-    let target = paths::engines_dir().join(&def.id).join(sanitize_version(version));
+    let target = paths::engines_dir()
+        .join(&def.id)
+        .join(sanitize_version(version));
     if target.exists() {
         fs::remove_dir_all(&target)?;
     }
