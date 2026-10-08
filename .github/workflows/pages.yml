@@ -23,7 +23,7 @@ jobs:
       - name: Check site (structure + links)
         run: node site/checks/sitecheck.mjs
       - name: Upload site artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: site
 
