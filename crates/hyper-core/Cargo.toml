@@ -17,7 +17,7 @@ sha2 = "0.10"
 hex = "0.4"
 zip = "0.6"
 reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls", "json", "gzip", "brotli"] }
-dirs = "5"
+dirs = "7"
 keyring = { version = "3", features = ["windows-native", "linux-native", "sync-secret-service"] }
 walkdir = "2"
 url = "2"
