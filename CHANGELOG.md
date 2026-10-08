@@ -48,6 +48,10 @@ version describe published releases.
 - README: added the Install section (curl one-liner, `irm | iex`, options and
   env vars, uninstall, no-telemetry note) and corrected the CLI reference and
   repository layout to match the shipped surface.
+- CI: the validate job installs the Linux GTK/webkit2gtk system deps the Tauri
+  crate needs (previously only the build job did), the workspace is
+  rustfmt-formatted so `cargo fmt --check` passes, and GitHub Pages uses
+  workflow-based deploys (enabled on the repository).
 
 ### Fixed
 - Fresh installs had update checks silently disabled: `UpdateSettings` derived
@@ -69,6 +73,11 @@ version describe published releases.
   public repo's archives.
 - `store::latest_dir` / `cmp_versions` order installed versions correctly
   (was string-ordering, so `1.10.0` lost to `1.9.0`).
+- Launcher window icons are RGBA PNGs; Tauri's `generate_context!` rejects
+  non-RGBA icons when building on Linux.
+- The keyring roundtrip test skips (with a message) instead of panicking when
+  the platform has no Secret Service, e.g. on CI runners; it still asserts
+  fully wherever a real OS keyring exists.
 - Detection avoided a race in parallel tests over a shared temp directory.
 - `mod_folder_name` fallback now hashes the path when the folder has no
   final component.

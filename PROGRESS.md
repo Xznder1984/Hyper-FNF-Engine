@@ -29,7 +29,10 @@ incomplete item. Verified items are marked `[x]` only after a test actually ran.
 - [x] Website: home, download, docs, sarahud, privacy, terms, cookie; checks (DoD 8)
 - [x] Legal: LICENSE, THIRD-PARTY-NOTICES, SECURITY, CONTRIBUTING, CoC
 - [x] CI: win/mac/linux build matrix + checksums + gitleaks + pages deploy (DoD 7)
-      — workflows committed; they run on the first push
+      — first push exposed and fixed three workflow issues (rustfmt drift,
+      missing Linux GTK/webkit2gtk deps in the validate job, non-RGBA launcher
+      icons rejected by Tauri codegen on Linux); after the fixes the full run
+      is green: validate + gitleaks + all three OS release builds + Pages
 - [ ] AUR PKGBUILD stable + -git; clean Arch container build (DoD 6)
       — files present and syntax-validated only; no Arch distro exists in this
       container, so the container build was NOT executed
@@ -63,6 +66,17 @@ incomplete item. Verified items are marked `[x]` only after a test actually ran.
 - (verified 2026-10-09) `NO_COLOR=1 hfe doctor`: all checks pass, no ANSI codes
 - (verified 2026-10-09) `hfe run <local base game> --engine funkin-official
   --dry-run` resolves v0.8.7; bare detection on that folder warns low confidence
+- (verified 2026-10-09) full GitHub Actions run on the first release push is
+  green: Secret scanning, Validate (fmt + site + clippy + tests), and release
+  builds on ubuntu/windows/macos; Pages deploy green
+- (verified 2026-10-09) site is live at https://xznder1984.github.io/Hyper-FNF-Engine/
+  (fetched after the Pages deploy; home page renders with all nav links)
+- (verified 2026-10-09) `cargo fmt --all -- --check` clean (workspace was
+  formatted after CI enforced it); keyring roundtrip test skips cleanly when
+  the platform has no Secret Service (CI runner) and still asserts on Windows
+- (verified 2026-10-09) launcher window icons converted RGB -> RGBA (Tauri's
+  `generate_context!` rejects non-RGBA PNGs on Linux; local Windows rebuild
+  still clean)
 - (verified 2026-10-09) installers: `install.sh` (`bash -n` + failure path
   prints `error: download failed: ...404`), `install.ps1` (PS 5.1 parser +
   same failure path); both exit 1 on a bad tag
