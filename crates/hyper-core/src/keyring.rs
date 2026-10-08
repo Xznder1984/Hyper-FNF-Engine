@@ -61,7 +61,18 @@ mod tests {
         if entry(SERVICE, "roundtrip-test").is_none() {
             return;
         }
-        set(SERVICE, "roundtrip-test", "abc").unwrap();
+        if let Err(e) = set(SERVICE, "roundtrip-test", "abc") {
+            let msg = e.to_string();
+            // CI containers and minimal desktops have no Secret Service
+            // (org.freedesktop.secrets); a missing platform store is an
+            // environment limit, not a code regression — skip those.
+            if msg.contains("Platform") || msg.contains("DBus") || msg.contains("credential store")
+            {
+                eprintln!("skipping keyring roundtrip, no usable OS keyring: {msg}");
+                return;
+            }
+            panic!("keyring roundtrip failed: {msg}");
+        }
         assert_eq!(
             get(SERVICE, "roundtrip-test").unwrap().as_deref(),
             Some("abc")
