@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://xznder1984.github.io/Hyper-FNF-Engine/sitemap.xml

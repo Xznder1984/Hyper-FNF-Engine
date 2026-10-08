@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Privacy — Hyper Engine</title>
+<meta name="description" content="Hyper Engine privacy policy: no telemetry, no accounts, official GitHub API access only, keyring-stored token." />
+<link rel="icon" href="assets/icon.png" />
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site">
+  <div class="brand" aria-hidden="true">H</div>
+  <div>
+    <div class="site-name">Hyper Engine</div>
+    <div class="site-tag">Unofficial FNF engine manager</div>
+  </div>
+  <nav class="site" aria-label="Primary">
+    <a href="index.html">Home</a>
+    <a href="download.html">Download</a>
+    <a href="docs.html">Docs</a>
+    <a href="sarahud.html">SaraHUD</a>
+    <a href="privacy.html" aria-current="page">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="cookies.html">Cookies</a>
+  </nav>
+</header>
+
+<main id="main">
+  <h1>Privacy</h1>
+  <p><em>Last updated 2026-10-08. The short version first: there is no telemetry and no account.</em></p>
+
+  <h2>What we do not do</h2>
+  <ul>
+    <li>No analytics, no tracking, no fingerprinting, no ads.</li>
+    <li>No account system, no registration, no user profile.</li>
+    <li>No phone-home in the app, launcher, or the optional SaraHUD note.</li>
+    <li>No uploads of your mods, files, or folder listings anywhere.</li>
+  </ul>
+
+  <h2>What happens on your machine</h2>
+  <p>
+    Hyper Engine reads the mod folder you point it at, only to detect the
+    engine. Everything is computed locally. Preference data (which engine you
+    chose for a mod, game assets path, SaraHUD preference) is stored in a local
+    settings file next to the application data, and can be deleted at any time.
+  </p>
+
+  <h2>Network connections</h2>
+  <table>
+    <thead>
+      <tr><th scope="col">Endpoint</th><th scope="col">Purpose</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>github.com (API + Releases)</td><td>List and download official engine releases and Hyper Engine updates. HTTPS only.</td></tr>
+      <tr><td>Official engine/update sources</td><td>Downloading an engine or a SaraHUD release you approved.</td></tr>
+    </tbody>
+  </table>
+  <p>
+    When you check for engine releases or updates, GitHub sees a normal API
+    request from your IP address. If you provide a GitHub personal access token
+    (optional, to raise the API rate limit), it is stored only in your operating
+    system’s keyring — never in a file, never sent to us — and it is sent only
+    to GitHub as an authentication header.
+  </p>
+
+  <h2>Remote configuration</h2>
+  <p>
+    Remote update manifests are verified against pinned SHA-256 digests before
+    any auto-update. A compromised manifest cannot push arbitrary code.
+  </p>
+
+  <h2>Data deletion</h2>
+  <p>
+    Delete the application data directory (the CLI will tell you its exact path
+    with <code>hfe doctor</code>). Because nothing is stored with us, there is
+    nothing further to erase.
+  </p>
+
+  <h2>Contact</h2>
+  <p>
+    Open an issue on the
+    <a href="https://github.com/Xznder1984/Hyper-FNF-Engine">GitHub repository</a>.
+    This project is maintained by volunteers; we do not sell or share personal
+    data because we never receive any.
+  </p>
+</main>
+
+<footer class="site">
+  <span>Hyper Engine is unofficial and not affiliated with the Friday Night Funkin’ team.</span>
+  <nav aria-label="Legal footer">
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="cookies.html">Cookies</a>
+    <a href="https://github.com/Xznder1984/Hyper-FNF-Engine">Source on GitHub</a>
+  </nav>
+</footer>
+</body>
+</html>

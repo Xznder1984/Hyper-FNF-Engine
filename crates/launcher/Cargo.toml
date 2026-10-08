@@ -1,0 +1,24 @@
+[package]
+name = "hyper-launcher"
+description = "Hyper Engine desktop launcher (Tauri 2). Detects, fetches and launches the exact FNF engine a mod was built for."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+default-run = "hyper-launcher"
+rust-version = "1.77.2"
+
+[lib]
+name = "hyper_launcher_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+open = "5"
+serde = { workspace = true }
+serde_json = { workspace = true }
+hyper-core = { workspace = true }

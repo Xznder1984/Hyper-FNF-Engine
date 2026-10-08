@@ -1,0 +1,18 @@
+pkgbase = hyper-fnf-engine-git
+	pkgdesc = Run any Friday Night Funkin' mod on the exact engine it was built for (unofficial CLI: hfe; git build).
+	pkgver = r0.0.0.HEAD
+	pkgrel = 1
+	url = https://github.com/Xznder1984/Hyper-FNF-Engine
+	install = skel
+	arch = x86_64
+	license = Apache-2.0
+	makedepends = cargo
+	makedepends = git
+	makedepends = rust
+	depends = gcc-libs
+	conflicts = hyper-fnf-engine
+	provides = hyper-fnf-engine
+	source = hyper-fnf-engine-git::git+https://github.com/Xznder1984/Hyper-FNF-Engine.git
+	sha256sums = SKIP
+
+pkgname = hyper-fnf-engine-git

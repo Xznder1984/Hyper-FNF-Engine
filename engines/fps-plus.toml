@@ -1,0 +1,33 @@
+id = "fps-plus"
+name = "FPS+ (Psych Engine Plus)"
+license = "Apache-2.0"
+homepage = "https://github.com/Psych-Plus-Team/FNF-PlusEngine"
+repo = "ThatRozebudDude/FPS-Plus-Public"
+mods_dir = "mods"
+order_file = "order"
+mod_metadata = ["meta.json"]
+requires_uid = true
+script_warning = true
+sarahud = "fps-plus"
+notes = [
+  "FPS+ mods MUST carry a unique uid in meta.json (Mod API >= 1.4).",
+  "mod order lives in mods/order (enabled folders first).",
+  "Official builds are published on GitHub Releases as fpsplus_v*.zip (v7.1.x line).",
+]
+
+[asset_patterns.windows]
+patterns = ["fpsplus_v"]
+[asset_patterns.linux]
+patterns = []
+[asset_patterns.macos]
+patterns = []
+
+[detect.signatures]
+"data/**" = 2
+"songs/**" = 2
+"assets/**" = 1
+"scripts/**/*.hx" = 2
+"scripts/**/*.lua" = 2
+"stages/**" = 1
+[detect.metadata_scores]
+"meta.json" = 5

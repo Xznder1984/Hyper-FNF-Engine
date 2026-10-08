@@ -1,0 +1,22 @@
+# Rust
+/target
+**/*.rs.bk
+
+# Haxe
+/backend
+*.js.map
+
+# Tauri / node (dev tooling only)
+/node_modules
+/dist
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local config / secrets
+.env
+*.pem
+*.key
+.hyper*

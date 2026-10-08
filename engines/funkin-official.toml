@@ -1,0 +1,28 @@
+id = "funkin-official"
+name = "Friday Night Funkin' (official)"
+license = "Apache-2.0 (code; assets have their own licence)"
+homepage = "https://funkin.me"
+repo = "FunkinCrew/Funkin"
+mods_dir = "mods"
+mod_metadata = ["manifest.json"]
+requires_uid = false
+script_warning = false
+notes = [
+  "Full game builds are published on the official GitHub Releases (v0.8.x).",
+  "V-Slice mods declare metadata in manifest.json inside the mod folder."
+]
+
+[asset_patterns.windows]
+patterns = ["funkin-windows-64bit.zip"]
+[asset_patterns.macos]
+patterns = []
+[asset_patterns.linux]
+patterns = ["funkin-linux-64bit.zip"]
+
+[detect.signatures]
+"data/**" = 2
+"songs/**" = 2
+"assets/**" = 1
+"manifest.json" = 3
+[detect.metadata_scores]
+"manifest.json" = 5

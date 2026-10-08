@@ -1,0 +1,35 @@
+id = "psych"
+name = "Psych Engine"
+license = "Apache-2.0"
+homepage = "https://github.com/ShadowMario/FNF-PsychEngine"
+repo = "ShadowMario/FNF-PsychEngine"
+mods_dir = "mods"
+order_file = "modsList.txt"
+mod_metadata = ["pack.json", "mods.json"]
+requires_uid = false
+script_warning = true
+sarahud = "psych"
+notes = [
+  "Ships the base game content in its official release archives.",
+  "mod order lives in mods/modsList.txt (enabled folders first)."
+]
+
+[asset_patterns.windows]
+patterns = ["PsychEngine-Windows64.zip", "PsychEngine-Windows32.zip"]
+[asset_patterns.macos]
+patterns = ["PsychEngine-MacOS.zip"]
+[asset_patterns.linux]
+patterns = ["PsychEngine-Linux.zip"]
+
+[detect]
+# (key = relative glob, value = weight)
+[detect.signatures]
+"data/**" = 2
+"songs/**" = 2
+"assets/**" = 1
+"scripts/**/*.lua" = 2
+"stages/**" = 1
+"chars/**" = 1
+[detect.metadata_scores]
+"pack.json" = 5
+"mods.json" = 4

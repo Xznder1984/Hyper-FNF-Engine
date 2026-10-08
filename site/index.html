@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hyper Engine — run any FNF mod on the engine it was built for</title>
+<meta name="description" content="Hyper Engine detects which Friday Night Funkin' engine a mod targets, fetches that exact engine from official sources, and launches it." />
+<link rel="icon" href="assets/icon.png" />
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site">
+  <div class="brand" aria-hidden="true">H</div>
+  <div>
+    <div class="site-name">Hyper Engine</div>
+    <div class="site-tag">Unofficial FNF engine manager</div>
+  </div>
+  <nav class="site" aria-label="Primary">
+    <a href="index.html" aria-current="page">Home</a>
+    <a href="download.html">Download</a>
+    <a href="docs.html">Docs</a>
+    <a href="sarahud.html">SaraHUD</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="cookies.html">Cookies</a>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <h1>Run any FNF mod on the exact engine it was built for.</h1>
+    <p class="lede">
+      Hyper Engine looks at a mod folder, works out which engine it targets
+      (Psych, Codename, FPS+, the official game…), fetches that exact engine
+      from <strong>official sources only</strong>, and launches the mod against
+      it — side by side with anything else you run, without touching unrelated
+      installs.
+    </p>
+    <div class="actions">
+      <a class="button" href="download.html">Get Hyper Engine</a>
+      <a class="button ghost" href="docs.html">Read the docs</a>
+    </div>
+  </section>
+
+  <h2>Why this exists</h2>
+  <p>
+    Friday Night Funkin' mods are built against specific engines. When a mod
+    says “run with Psych Engine 1.0.4”, that is what it was tuned for.
+    Hyper Engine reads the mod’s own metadata and structural markers
+    (<code>pack.json</code>, <code>meta.json</code> + uid,
+    <code>metadata.json</code> / <code>main.xml</code>, and so on) to pick the
+    right engine and version instead of guessing.
+  </p>
+
+  <h2>Engines</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Psych Engine</h3>
+      <p class="engines">mods/folder with pack.json and modsList.txt (Lua + HScript).</p>
+    </div>
+    <div class="card">
+      <h3>Codename Engine</h3>
+      <p class="engines">metadata.json at the mod root; content via main.xml.</p>
+    </div>
+    <div class="card">
+      <h3>FPS+ (Psych Plus)</h3>
+      <p class="engines">meta.json carrying a unique uid and Haxe scripts.</p>
+    </div>
+    <div class="card">
+      <h3>Funkin’ Official</h3>
+      <p class="engines">manifest.json and HaxeWeek chart data.</p>
+    </div>
+  </div>
+  <p>
+    Every engine definition lives in the repository as reviewable TOML — with
+    the official source URL, asset naming, and mod layout used for detection.
+  </p>
+
+  <h2>Only official sources</h2>
+  <div class="notice">
+    <strong>Policy.</strong> Hyper Engine downloads engines and add-ons from the
+    creators’ own GitHub Releases and the classic FNF sources. There is no CDN,
+    no “optimized” repack, and no download through us. HTTP is refused — only
+    HTTPS. Shell links are gated and require consent.
+  </div>
+
+  <h2>Safety &amp; openness</h2>
+  <ul>
+    <li>Apache-2.0 licensed, no game assets shipped (nothing copyrighted from FNF).</li>
+    <li>Checksums verified on download; archives are zip-slip guarded.</li>
+    <li>Engines install side-by-side by version; you stay in control.</li>
+    <li>SaraHUD is optional and opt-in (official release, first in mod order).</li>
+  </ul>
+
+  <h2>How it looks</h2>
+  <p>
+    A small command line (<code>hfe</code>) for scripts and power users, plus an
+    optional lightweight desktop launcher built with Tauri&nbsp;2. Both share the
+    same local store, so switching between them is seamless.
+  </p>
+
+  <div class="actions">
+    <a class="button" href="download.html">Download</a>
+    <a class="button ghost" href="docs.html">CLI reference</a>
+  </div>
+</main>
+
+<footer class="site">
+  <span>Hyper Engine is unofficial and not affiliated with, endorsed by, or sponsored by the Friday Night Funkin’ team, Newgrounds, or any engine team.</span>
+  <nav aria-label="Legal footer">
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="cookies.html">Cookies</a>
+    <a href="https://github.com/Xznder1984/Hyper-FNF-Engine">Source on GitHub</a>
+  </nav>
+</footer>
+</body>
+</html>

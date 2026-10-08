@@ -1,0 +1,34 @@
+id = "codename"
+name = "Codename Engine"
+license = "Apache-2.0"
+homepage = "https://github.com/CodenameCrew/CodenameEngine"
+repo = "CodenameCrew/CodenameEngine"
+mods_dir = "mods"
+order_file = "modOrder.txt"
+mod_metadata = ["metadata.json", "main.xml"]
+requires_uid = false
+script_warning = true
+needs_base_assets = false
+notes = [
+  "Codename Engine's project README asks creators not to ship side engines.",
+  "Mods: metadata.json at the mod root; softcoded content via main.xml.",
+  "GitHub Releases carry Codename.Engine-* zips (stable v1.0.x line).",
+]
+
+[asset_patterns.windows]
+patterns = ["Codename.Engine-Windows.zip"]
+[asset_patterns.macos]
+patterns = ["Codename.Engine-Mac.zip"]
+[asset_patterns.linux]
+patterns = ["Codename.Engine-Linux.zip"]
+
+[detect.signatures]
+"data/**" = 2
+"songs/**" = 2
+"assets/**" = 1
+"stages/**" = 1
+"scripts/**" = 1
+"main.xml" = 2
+[detect.metadata_scores]
+"metadata.json" = 5
+"main.xml" = 4

@@ -1,0 +1,93 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  secrets:
+    name: Secret scanning
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+
+  validate:
+    name: Validate (fmt + site + clippy + tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: rustfmt, clippy
+      - name: rustfmt
+        run: cargo fmt --all -- --check
+      - name: Website checks
+        run: node site/checks/sitecheck.mjs
+      - name: clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
+      - name: tests
+        run: cargo test --workspace
+
+  build:
+    name: Build (${{ matrix.os }})
+    needs: [secrets, validate]
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+
+      - name: Install Linux system deps (Tauri/webkit2gtk)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf
+
+      - name: Build release binaries
+        run: cargo build --release
+
+      - name: Collect artifacts
+        id: collect
+        shell: bash
+        run: |
+          set -euo pipefail
+          artifacts_dir="$RUNNER_TEMP/artifacts"
+          mkdir -p "$artifacts_dir"
+          out=target/release
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            cp "$out/hfe.exe" "$out/hyper-launcher.exe" "$artifacts_dir/"
+          else
+            cp "$out/hfe" "$out/hyper-launcher" "$artifacts_dir/"
+          fi
+          echo "path=$artifacts_dir" >> "$GITHUB_OUTPUT"
+
+      - name: Write checksums (sha256.txt)
+        shell: bash
+        run: |
+          cd "${{ steps.collect.outputs.path }}"
+          sha256sum * | tee sha256.txt
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-binaries
+          path: ${{ steps.collect.outputs.path }}
+          if-no-files-found: error

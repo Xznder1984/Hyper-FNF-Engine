@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Documentation — Hyper Engine</title>
+<meta name="description" content="Hyper Engine documentation: how detection works, the hfe command line reference, the engine store, and how updates are verified." />
+<link rel="icon" href="assets/icon.png" />
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site">
+  <div class="brand" aria-hidden="true">H</div>
+  <div>
+    <div class="site-name">Hyper Engine</div>
+    <div class="site-tag">Unofficial FNF engine manager</div>
+  </div>
+  <nav class="site" aria-label="Primary">
+    <a href="index.html">Home</a>
+    <a href="download.html">Download</a>
+    <a href="docs.html" aria-current="page">Docs</a>
+    <a href="sarahud.html">SaraHUD</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="cookies.html">Cookies</a>
+  </nav>
+</header>
+
+<main id="main">
+  <h1>Documentation</h1>
+
+  <h2>How detection works</h2>
+  <p>
+    Hyper Engine scores a mod folder against machine-readable engine
+    definitions (plain TOML in the repository). It reads metadata files at the
+    mod root and structural markers inside the folder:
+  </p>
+  <table>
+    <thead>
+      <tr><th scope="col">Engine</th><th scope="col">Metadata</th><th scope="col">Mods directory</th><th scope="col">Order file</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Psych Engine</td><td><code>pack.json</code> / <code>mods.json</code></td><td><code>mods</code></td><td><code>modsList.txt</code></td></tr>
+      <tr><td>Codename Engine</td><td><code>metadata.json</code> + <code>main.xml</code></td><td><code>mods</code></td><td><code>modOrder.txt</code></td></tr>
+      <tr><td>FPS+ (Psych Plus)</td><td><code>meta.json</code> with a unique <code>uid</code></td><td><code>mods</code></td><td><code>order</code></td></tr>
+      <tr><td>Funkin’ Official</td><td><code>manifest.json</code></td><td><code>mods</code></td><td>—</td></tr>
+    </tbody>
+  </table>
+  <p>
+    Detection is decisive (High confidence) only when one engine owns the mod’s
+    metadata files. Otherwise the best-scoring candidate is shown with its
+    evidence, and <code>hfe run --engine id</code> overrides.
+  </p>
+
+  <h2>Installation model</h2>
+  <ul>
+    <li>Engines are stored side-by-side by tag (<code>engines/psych/1.0.4/…</code>).</li>
+    <li>Downloads are cached, checksummed (SHA-256), and zip-slip guarded.</li>
+    <li>Everything is HTTPS-only; a broken release never overwrites an installed one.</li>
+    <li>Uninstall/cleanup asks for consent before removing files.</li>
+  </ul>
+
+  <h2>Command line — <code>hfe</code></h2>
+  <pre><code>hfe init [--engine psych] [--yes]                 # scaffold a mod + remember the engine
+hfe run [PATH] [--engine id] [--version tag]      # detect, fetch if needed, stage, launch
+hfe add assets &lt;path&gt;                              # point at a local base-game copy
+hfe update --check | --apply                        # self-update (verified, rollback on fail)
+hfe list [--installed]                              # engines and installed versions
+hfe doctor                                          # environment diagnostics
+hfe bench PATH                                      # measured launch/load numbers (only real measurements)
+hfe pkg install foo                                 # package registry (coming soon)
+hfe engines list --remote                           # engines known to Hyper Engine</code></pre>
+  <p>Flags common to prompts: <code>--yes</code> / <code>--no-input</code> make scripts non-interactive. Exit codes are documented in <code>hfe --help</code>.</p>
+
+  <h3>Running a mod</h3>
+  <pre><code>hfe run "C:\Mods\MyPsychMod"          # detects Psych, installs matching engine, launches</code></pre>
+  <p>
+    Hyper Engine stages the mod into a fresh engine install (it never modifies a
+    shared engine), then records the choice so the next launch is instant.
+  </p>
+
+  <h2>Headless / CI use</h2>
+  <pre><code>hfe run . --dry-run                     # plan without touching anything
+hfe bench . --format json                # emit measured numbers</code></pre>
+
+  <h2>Updates &amp; rollback</h2>
+  <p>
+    The CLI can update itself from the official update manifest. The previous
+    binary is kept so a failed update rolls back automatically; nothing is ever
+    replaced until the new artifact verifies.
+  </p>
+
+  <h2>Privacy by default</h2>
+  <p>
+    No telemetry. Engine lists come from the official GitHub APIs; a GitHub
+    token you optionally provide is stored only in your OS keyring and sent
+    only to GitHub. See <a href="privacy.html">Privacy</a>.
+  </p>
+</main>
+
+<footer class="site">
+  <span>Hyper Engine is unofficial and not affiliated with the Friday Night Funkin’ team.</span>
+  <nav aria-label="Legal footer">
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="cookies.html">Cookies</a>
+    <a href="https://github.com/Xznder1984/Hyper-FNF-Engine">Source on GitHub</a>
+  </nav>
+</footer>
+</body>
+</html>

@@ -1,0 +1,10 @@
+[package]
+name = "hyper-pkg"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Hyper Engine package registry client interface + manifest format."
+
+[dependencies]
+thiserror = { workspace = true }

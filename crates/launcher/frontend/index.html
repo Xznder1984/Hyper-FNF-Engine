@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hyper Engine</title>
+  <meta name="description" content="Hyper Engine - detect, fetch and launch the exact Friday Night Funkin' engine your mod was built for." />
+  <link rel="icon" href="icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="brand" aria-hidden="true">H</div>
+    <div>
+      <h1>Hyper Engine</h1>
+      <p class="tagline">Unofficial Friday Night Funkin' engine manager.</p>
+    </div>
+    <nav aria-label="Primary">
+      <a href="#apps" class="navlink">Mods</a>
+      <a href="#engines" class="navlink">Engines</a>
+      <a href="#settings" class="navlink">Settings</a>
+    </nav>
+    <button id="btn-refresh" type="button" class="ghost">Refresh</button>
+  </header>
+
+  <main id="main">
+    <p id="status" role="status" class="banner" aria-live="polite"></p>
+    <p id="alerts" role="alert" class="alert" hidden></p>
+
+    <section id="apps" aria-labelledby="apps-h">
+      <h2 id="apps-h">Run a mod</h2>
+      <form id="mod-form" novalidate>
+        <label for="mod-path">Mod folder</label>
+        <div class="row">
+          <input id="mod-path" name="path" type="text" required autocomplete="off"
+                 placeholder="C:\Users\you\Desktop\MyMod" />
+          <button type="submit" id="btn-detect" class="primary">Detect</button>
+          <button type="button" id="btn-launch" class="primary" disabled>Launch</button>
+        </div>
+        <p class="hint" id="path-error" role="alert"></p>
+      </form>
+
+      <section id="detection" aria-labelledby="detection-h" hidden>
+        <h3 id="detection-h">Detection</h3>
+        <dl class="results">
+          <div><dt>Engine</dt><dd id="det-engine">-</dd></div>
+          <div><dt>Confidence</dt><dd id="det-confidence">-</dd></div>
+          <div><dt>Evidence</dt><dd id="det-evidence">-</dd></div>
+          <div><dt>Candidates</dt><dd id="det-candidates">-</dd></div>
+        </dl>
+      </section>
+
+      <section id="progress-box" aria-labelledby="progress-h" hidden>
+        <h3 id="progress-h">Progress</h3>
+        <ol id="progress-list" tabindex="0" aria-label="Recent steps"></ol>
+      </section>
+    </section>
+
+    <section id="engines" aria-labelledby="engines-h">
+      <h2 id="engines-h">Available engines</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Engine</th>
+              <th scope="col">License</th>
+              <th scope="col">Installed</th>
+              <th scope="col">Source</th>
+            </tr>
+          </thead>
+          <tbody id="engine-rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="settings" aria-labelledby="settings-h">
+      <h2 id="settings-h">Settings</h2>
+
+      <form id="assets-form" class="card">
+        <label for="assets-path">Base game assets folder (for engines that need them)</label>
+        <div class="row">
+          <input id="assets-path" type="text" autocomplete="off" />
+          <button type="submit" class="primary">Save</button>
+        </div>
+      </form>
+
+      <form id="hud-form" class="card">
+        <div class="row">
+          <span><label for="hud-toggle" id="hud-label">Install SaraHUD automatically</label>
+          <p class="hint">Official source only; set first in mod order.</p></span>
+          <input id="hud-toggle" type="checkbox" role="switch" />
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>Hyper Engine is unofficial and not affiliated with the Friday Night Funkin' team.</p>
+    <nav aria-label="Legal">
+      <button class="linklike" data-href="https://github.com/Xznder1984/Hyper-FNF-Engine">Project</button>
+    </nav>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

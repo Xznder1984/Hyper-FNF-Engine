@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Download — Hyper Engine</title>
+<meta name="description" content="Download Hyper Engine: the hfe command line for Windows, macOS and Linux, an Arch AUR package, and a desktop launcher." />
+<link rel="icon" href="assets/icon.png" />
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site">
+  <div class="brand" aria-hidden="true">H</div>
+  <div>
+    <div class="site-name">Hyper Engine</div>
+    <div class="site-tag">Unofficial FNF engine manager</div>
+  </div>
+  <nav class="site" aria-label="Primary">
+    <a href="index.html">Home</a>
+    <a href="download.html" aria-current="page">Download</a>
+    <a href="docs.html">Docs</a>
+    <a href="sarahud.html">SaraHUD</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="cookies.html">Cookies</a>
+  </nav>
+</header>
+
+<main id="main">
+  <h1>Download</h1>
+  <p class="notice">
+    The first public release is still being prepared. Binaries will be
+    published under the Releases tab of the
+    <a href="https://github.com/Xznder1984/Hyper-FNF-Engine">GitHub repository</a>
+    with a <code>sha256.txt</code> checksum file for every artifact. Until then,
+    everything below is how you run the current development build.
+  </p>
+
+  <h2>Build from source</h2>
+  <p>You need Rust (stable, &ge; 1.77.2) and, to run the desktop launcher, a system with the Tauri prerequisites.</p>
+  <pre><code>git clone https://github.com/Xznder1984/Hyper-FNF-Engine.git
+cd Hyper-FNF-Engine
+cargo build --release -p hfe-cli
+./target/release/hfe --help</code></pre>
+
+  <h2>Package managers</h2>
+  <table>
+    <thead>
+      <tr><th scope="col">Platform</th><th scope="col">Source</th><th scope="col">Status</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Arch Linux (stable)</td><td>AUR <code>hyper-fnf-engine</code></td><td>planned</td></tr>
+      <tr><td>Arch Linux (git)</td><td>AUR <code>hyper-fnf-engine-git</code></td><td>planned</td></tr>
+      <tr><td>Windows / macOS</td><td>GitHub Releases</td><td>planned</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Desktop launcher</h2>
+  <p>
+    The <code>hyper-launcher</code> GUI (Tauri 2) ships with the same store as
+    the CLI. Build it locally with:
+  </p>
+  <pre><code>cargo build -p hyper-launcher
+cargo run -p hyper-launcher</code></pre>
+  <p>
+    Windows uses the preinstalled WebView2 runtime (Windows 10/11). macOS and
+    Linux need the standard Tauri system packages (webkit2gtk, etc.).
+  </p>
+
+  <h2>Verify downloads</h2>
+  <p>
+    Every release upload includes <code>sha256.txt</code>. Verify a download on
+    Linux/macOS with <code>sha256sum -c sha256.txt</code> and on Windows with
+    <code>Get-FileHash artifact -Algorithm SHA256</code>.
+  </p>
+
+  <div class="actions">
+    <a class="button" href="https://github.com/Xznder1984/Hyper-FNF-Engine/releases">Releases</a>
+    <a class="button ghost" href="docs.html">Usage guide</a>
+  </div>
+</main>
+
+<footer class="site">
+  <span>Hyper Engine is unofficial and not affiliated with the Friday Night Funkin’ team.</span>
+  <nav aria-label="Legal footer">
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="cookies.html">Cookies</a>
+    <a href="https://github.com/Xznder1984/Hyper-FNF-Engine">Source on GitHub</a>
+  </nav>
+</footer>
+</body>
+</html>

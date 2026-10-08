@@ -1,0 +1,30 @@
+[package]
+name = "hyper-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Hyper Engine core: FNF engine detection, download, install, launch."
+build = "build.rs"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+toml = { workspace = true }
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+sha2 = "0.10"
+hex = "0.4"
+zip = "0.6"
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls", "json", "gzip", "brotli"] }
+dirs = "5"
+keyring = { version = "3", features = ["windows-native", "linux-native", "sync-secret-service"] }
+walkdir = "2"
+url = "2"
+regex = "1"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.59", features = ["Win32_Foundation", "Win32_System_Threading", "Win32_System_Diagnostics_ToolHelp"] }
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"

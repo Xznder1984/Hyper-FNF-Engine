@@ -1,0 +1,93 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Release binaries (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            platform: linux-x64
+            triple: x86_64-unknown-linux-gnu
+          - os: windows-latest
+            platform: windows-x64
+            triple: x86_64-pc-windows-msvc
+          # macos-latest runners are arm64 since 2026; change `triple`
+          # if GitHub rotates the fleet back to x64 runners.
+          - os: macos-latest
+            platform: macos-x64
+            triple: aarch64-apple-darwin
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+
+      - name: Install Linux system deps (Tauri/webkit2gtk)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf
+
+      - name: Build release binaries
+        run: cargo build --release
+
+      - name: Stage + checksum
+        id: stage
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage_dir="$RUNNER_TEMP/stage"
+          mkdir -p "$stage_dir"
+          out=target/release
+          tag="${GITHUB_REF_NAME#v}"
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            exe=".exe"
+          else
+            exe=""
+          fi
+          cp "$out/hfe$exe" "$stage_dir/hfe-${{ matrix.platform }}-$tag$exe"
+          cp "$out/hyper-launcher$exe" "$stage_dir/hyper-launcher-${{ matrix.platform }}-$tag$exe"
+          (cd "$stage_dir" && sha256sum *) > "$stage_dir/sha256-${{ matrix.platform }}-$tag.txt"
+          echo "path=$stage_dir" >> "$GITHUB_OUTPUT"
+
+      - name: Package canonical installer assets
+        id: canonical
+        shell: bash
+        run: |
+          set -euo pipefail
+          can="$RUNNER_TEMP/canonical"
+          mkdir -p "$can"
+          out=target/release
+          triple="${{ matrix.triple }}"
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            cp "$out/hfe.exe" "$can/hfe.exe"
+            (cd "$can" && tar -a -cf "hfe-$triple.zip" hfe.exe)
+            rm -f "$can/hfe.exe"
+          else
+            cp "$out/hfe" "$can/hfe"
+            chmod +x "$can/hfe"
+            (cd "$can" && tar -czf "hfe-$triple.tar.gz" hfe)
+            rm -f "$can/hfe"
+          fi
+          for f in "$can"/hfe-*; do
+            (cd "$can" && sha256sum "$(basename "$f")" > "$(basename "$f").sha256")
+          done
+          echo "canonical=$can" >> "$GITHUB_OUTPUT"
+
+      - name: Upload to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ steps.stage.outputs.path }}/*
+            ${{ steps.canonical.outputs.canonical }}/*
+          fail_on_unmatched_files: true

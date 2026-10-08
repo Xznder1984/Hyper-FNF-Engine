@@ -1,0 +1,21 @@
+[package]
+name = "hfe-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "hfe - Hyper Engine command line interface."
+
+[[bin]]
+name = "hfe"
+path = "src/main.rs"
+
+[dependencies]
+hyper-core = { workspace = true }
+hyper-pkg = { workspace = true }
+anyhow = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+clap = { version = "4", features = ["derive", "wrap_help"] }
+rpassword = "7"
+anstyle = "1"

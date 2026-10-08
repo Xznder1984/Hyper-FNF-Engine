@@ -1,0 +1,7 @@
+-cp .
+-main Main
+-js ../frontend/app.js
+-D js-modern
+--macro keep("Main")
+--no-inline
+-DeadCodeElimination
