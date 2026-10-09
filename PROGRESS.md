@@ -71,6 +71,11 @@ incomplete item. Verified items are marked `[x]` only after a test actually ran.
   builds on ubuntu/windows/macos; Pages deploy green
 - (verified 2026-10-09) site is live at https://xznder1984.github.io/Hyper-FNF-Engine/
   (fetched after the Pages deploy; home page renders with all nav links)
+- (verified 2026-10-09) v0.1.0 tag → Release workflow success: GitHub Release
+  carries 15 assets — `hfe` + `hyper-launcher` for windows/linux/macos, the
+  canonical `hfe-<triple>.zip/.tar.gz` + `.sha256` files install.sh/install.ps1
+  pull, and per-platform sha256 manifests; no local builds needed afterwards
+  (local `target/` dirs deleted, ~37 GB freed across both drives)
 - (verified 2026-10-09) `cargo fmt --all -- --check` clean (workspace was
   formatted after CI enforced it); keyring roundtrip test skips cleanly when
   the platform has no Secret Service (CI runner) and still asserts on Windows
